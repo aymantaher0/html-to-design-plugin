@@ -6,8 +6,6 @@ import { FigmaMapper } from './mapper/figma-mapper';
 figma.showUI(__html__, {
   width: 360,
   height: 480,
-  themeColors: true,
-  title: 'HTML to Design',
 });
 
 // ─── Message Handler ───

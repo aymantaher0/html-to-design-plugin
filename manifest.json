@@ -6,10 +6,6 @@
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": ["*"],
-    "reasoning": "The plugin needs to fetch websites from any URL the user provides, including assets like images, fonts, and stylesheets."
-  },
-  "documentAccess": "dynamic-page",
-  "capabilities": [],
-  "enableProposedApi": false
+    "allowedDomains": ["*"]
+  }
 }
