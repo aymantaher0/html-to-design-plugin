@@ -1,0 +1,15 @@
+{
+  "name": "HTML to Design",
+  "id": "html-to-design-plugin",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "The plugin needs to fetch websites from any URL the user provides, including assets like images, fonts, and stylesheets."
+  },
+  "documentAccess": "dynamic-page",
+  "capabilities": [],
+  "enableProposedApi": false
+}
