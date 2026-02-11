@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -27,7 +28,7 @@ module.exports = (env, argv) => {
       mode: isProduction ? 'production' : 'development',
       devtool: isProduction ? false : 'inline-source-map',
     },
-    // Plugin UI
+    // Plugin UI - inlines JS into HTML (required for Figma plugins)
     {
       entry: './src/ui/ui.ts',
       output: {
@@ -55,9 +56,8 @@ module.exports = (env, argv) => {
           template: './src/ui/ui.html',
           filename: 'ui.html',
           inject: 'body',
-          inlineSource: '.(js|css)$',
-          chunks: ['main'],
         }),
+        new HtmlInlineScriptPlugin(),
       ],
       mode: isProduction ? 'production' : 'development',
       devtool: isProduction ? false : 'inline-source-map',

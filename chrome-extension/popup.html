@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      color: #333;
+      padding: 16px;
+    }
+    h2 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo { width: 20px; height: 20px; }
+    p { font-size: 12px; color: #666; margin-bottom: 12px; line-height: 1.5; }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      background: #18a0fb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn:hover { background: #0d8de6; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-secondary:hover { background: #e0e0e0; }
+    .status {
+      font-size: 11px;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+      display: none;
+    }
+    .status.visible { display: block; }
+    .status.success { background: #e6f9f0; color: #0d6e3f; }
+    .status.error { background: #fdecea; color: #b71c1c; }
+    .status.info { background: #e8f4fd; color: #0d47a1; }
+    .options {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h2>HTML to Design</h2>
+  <p>Capture this page and send it to Figma as an editable design.</p>
+
+  <button class="btn" id="btn-capture">Capture This Page</button>
+  <button class="btn btn-secondary" id="btn-capture-selection">Capture Selection</button>
+
+  <div class="options">
+    <div class="checkbox-row">
+      <input type="checkbox" id="opt-images" checked>
+      <label for="opt-images">Include images</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="opt-fonts" checked>
+      <label for="opt-fonts">Preserve fonts</label>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
