@@ -1,6 +1,6 @@
 /**
  * File parsing utility for handling uploaded files.
- * Supports .html, .htm, .zip, .eml, .emlx, .msg formats.
+ * Supports .html, .htm, .zip, .h2d, .eml, .emlx, .msg formats.
  */
 
 export interface ParsedFile {
@@ -21,6 +21,8 @@ export async function parseFile(file: File): Promise<ParsedFile[]> {
       return [await parseHtmlFile(file)];
     case 'zip':
       return parseZipFile(file);
+    case 'h2d':
+      return parseH2dFile(file);
     case 'eml':
     case 'emlx':
       return [await parseEmlFile(file)];
@@ -41,16 +43,26 @@ async function parseHtmlFile(file: File): Promise<ParsedFile> {
 }
 
 async function parseZipFile(file: File): Promise<ParsedFile[]> {
-  // Dynamic import of JSZip - loaded in UI context
   const JSZip = (window as any).JSZip;
   if (!JSZip) {
     throw new Error('ZIP support requires JSZip library');
   }
 
   const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const fileNames = Object.keys(zip.files);
+
+  // Detect Google Stitch exports (contain stitch.json or specific folder structure)
+  const isGoogleStitch = fileNames.some(
+    name => name === 'stitch.json' || name.endsWith('/stitch.json')
+  );
+
+  if (isGoogleStitch) {
+    return parseGoogleStitchZip(zip, fileNames);
+  }
+
   const results: ParsedFile[] = [];
 
-  const htmlFiles = Object.keys(zip.files).filter(
+  const htmlFiles = fileNames.filter(
     name => name.endsWith('.html') || name.endsWith('.htm')
   );
 
@@ -59,7 +71,7 @@ async function parseZipFile(file: File): Promise<ParsedFile[]> {
   }
 
   // Collect CSS files
-  const cssFiles = Object.keys(zip.files).filter(name => name.endsWith('.css'));
+  const cssFiles = fileNames.filter(name => name.endsWith('.css'));
   let combinedCss = '';
   for (const cssFile of cssFiles) {
     const content = await zip.files[cssFile].async('string');
@@ -73,6 +85,130 @@ async function parseZipFile(file: File): Promise<ParsedFile[]> {
       css: combinedCss,
       fileName: htmlFile,
     });
+  }
+
+  return results;
+}
+
+/**
+ * Parse a Google Stitch exported ZIP file.
+ * Stitch exports contain a stitch.json manifest and organized page assets.
+ */
+async function parseGoogleStitchZip(zip: any, fileNames: string[]): Promise<ParsedFile[]> {
+  const results: ParsedFile[] = [];
+
+  // Try to read the stitch manifest
+  const manifestFile = fileNames.find(
+    name => name === 'stitch.json' || name.endsWith('/stitch.json')
+  );
+
+  let manifest: any = null;
+  if (manifestFile) {
+    try {
+      const manifestContent = await zip.files[manifestFile].async('string');
+      manifest = JSON.parse(manifestContent);
+    } catch {
+      // Fallback to scanning for HTML files
+    }
+  }
+
+  // If we have a manifest with pages, use it to order imports
+  if (manifest?.pages && Array.isArray(manifest.pages)) {
+    for (const page of manifest.pages) {
+      const htmlPath = page.html || page.path;
+      if (htmlPath && zip.files[htmlPath]) {
+        const html = await zip.files[htmlPath].async('string');
+        let css = '';
+
+        // Load associated CSS
+        if (page.css && zip.files[page.css]) {
+          css = await zip.files[page.css].async('string');
+        }
+
+        results.push({
+          html,
+          css,
+          fileName: page.name || htmlPath,
+        });
+      }
+    }
+  }
+
+  // If manifest parsing didn't produce results, fall back to finding HTML files
+  if (results.length === 0) {
+    const htmlFiles = fileNames.filter(
+      name => name.endsWith('.html') || name.endsWith('.htm')
+    );
+
+    const cssFiles = fileNames.filter(name => name.endsWith('.css'));
+    let combinedCss = '';
+    for (const cssFile of cssFiles) {
+      combinedCss += await zip.files[cssFile].async('string') + '\n';
+    }
+
+    for (const htmlFile of htmlFiles) {
+      results.push({
+        html: await zip.files[htmlFile].async('string'),
+        css: combinedCss,
+        fileName: htmlFile,
+      });
+    }
+  }
+
+  if (results.length === 0) {
+    throw new Error('No importable pages found in Google Stitch export');
+  }
+
+  return results;
+}
+
+/**
+ * Parse an .h2d file (HTML to Design batch format).
+ * .h2d files are JSON containing one or more HTML/CSS page definitions.
+ */
+async function parseH2dFile(file: File): Promise<ParsedFile[]> {
+  const text = await readFileAsText(file);
+
+  let data: any;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error('Invalid .h2d file: not valid JSON');
+  }
+
+  const results: ParsedFile[] = [];
+
+  // Support both single-page and multi-page formats
+  if (Array.isArray(data)) {
+    for (const entry of data) {
+      if (entry.html) {
+        results.push({
+          html: entry.html,
+          css: entry.css || '',
+          fileName: entry.name || entry.fileName || file.name,
+        });
+      }
+    }
+  } else if (data.pages && Array.isArray(data.pages)) {
+    for (const page of data.pages) {
+      if (page.html) {
+        results.push({
+          html: page.html,
+          css: page.css || data.css || '',
+          fileName: page.name || page.fileName || file.name,
+        });
+      }
+    }
+  } else if (data.html) {
+    results.push({
+      html: data.html,
+      css: data.css || '',
+      fileName: data.name || file.name,
+    });
+  }
+
+  if (results.length === 0) {
+    throw new Error('No HTML content found in .h2d file');
   }
 
   return results;

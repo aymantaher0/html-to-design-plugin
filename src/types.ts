@@ -1,11 +1,9 @@
 // ─── Message types between UI and Plugin Controller ───
 
 export type MessageToController =
-  | { type: 'import-url'; url: string; viewports: ViewportType[] }
-  | { type: 'import-html'; html: string; css: string }
-  | { type: 'import-file'; fileName: string; content: string; fileType: string }
   | { type: 'import-dom'; dom: SerializedDOM }
-  | { type: 'reimport'; nodeId: string; url?: string; html?: string; css?: string }
+  | { type: 'reimport'; nodeId: string }
+  | { type: 'get-reimport-metadata'; nodeId: string }
   | { type: 'cancel' }
   | { type: 'resize'; width: number; height: number };
 
@@ -14,7 +12,8 @@ export type MessageToUI =
   | { type: 'import-progress'; message: string; percent: number }
   | { type: 'import-complete'; nodeId: string }
   | { type: 'import-error'; message: string }
-  | { type: 'selection-change'; hasDesignNode: boolean; nodeId?: string };
+  | { type: 'selection-change'; hasDesignNode: boolean; nodeId?: string }
+  | { type: 'reimport-metadata'; metadata: ImportMetadata; nodeId: string };
 
 // ─── Viewport ───
 
