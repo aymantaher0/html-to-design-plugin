@@ -6,6 +6,7 @@
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": ["*"]
+    "allowedDomains": ["*"],
+    "reasoning": "The plugin fetches websites from any URL the user provides, including images, fonts, and stylesheets."
   }
 }
