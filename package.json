@@ -1,0 +1,26 @@
+{
+  "name": "html-to-design",
+  "version": "1.0.0",
+  "description": "Convert any website into fully editable Figma designs. Import live URLs, HTML files, or code directly into Figma.",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "watch": "webpack --mode=development --watch",
+    "lint": "eslint 'src/**/*.ts'"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.98.0",
+    "css-loader": "^6.8.1",
+    "html-inline-script-webpack-plugin": "^3.2.1",
+    "html-webpack-plugin": "^5.5.3",
+    "raw-loader": "^4.0.2",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "css-tree": "^2.3.1",
+    "jszip": "^3.10.1"
+  }
+}

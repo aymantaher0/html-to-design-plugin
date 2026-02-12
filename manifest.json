@@ -1,0 +1,12 @@
+{
+  "name": "HTML to Design",
+  "id": "html-to-design-plugin",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "The plugin fetches websites from any URL the user provides, including images, fonts, and stylesheets."
+  }
+}

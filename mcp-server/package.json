@@ -1,0 +1,16 @@
+{
+  "name": "html-to-design-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for HTML to Design Figma plugin - AI-powered design generation",
+  "main": "index.js",
+  "bin": {
+    "html-to-design-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "type": "module"
+}
