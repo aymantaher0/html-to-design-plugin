@@ -9,20 +9,12 @@ figma.ui.onmessage = async (msg: MessageToController) => {
       await handleImportDOM(msg.dom);
       break;
 
-    case 'import-url':
-      sendToUI({ type: 'import-started' });
-      break;
-
-    case 'import-html':
-      sendToUI({ type: 'import-started' });
-      break;
-
-    case 'import-file':
-      sendToUI({ type: 'import-started' });
-      break;
-
     case 'reimport':
       await handleReimport(msg.nodeId);
+      break;
+
+    case 'get-reimport-metadata':
+      handleGetReimportMetadata(msg.nodeId);
       break;
 
     case 'cancel':
@@ -106,15 +98,45 @@ async function handleReimport(nodeId: string): Promise<void> {
   }
 
   try {
+    const metadata: ImportMetadata = JSON.parse(metadataStr);
+
+    // Store position of old frame so the new one replaces it
+    const oldX = frame.x;
+    const oldY = frame.y;
     frame.remove();
+
+    // Send metadata back to UI so it can re-fetch and re-parse
     sendToUI({
-      type: 'import-progress',
-      message: 'Re-importing...',
-      percent: 10,
+      type: 'reimport-metadata',
+      metadata: {
+        ...metadata,
+        // Store old position for the re-imported frame
+        reimportX: oldX,
+        reimportY: oldY,
+      } as any,
+      nodeId,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Re-import failed';
     sendToUI({ type: 'import-error', message });
+  }
+}
+
+function handleGetReimportMetadata(nodeId: string): void {
+  const node = figma.getNodeById(nodeId);
+  if (!node || node.type !== 'FRAME') {
+    return;
+  }
+
+  const frame = node as FrameNode;
+  const metadataStr = frame.getPluginData('importMetadata');
+  if (!metadataStr) return;
+
+  try {
+    const metadata: ImportMetadata = JSON.parse(metadataStr);
+    sendToUI({ type: 'reimport-metadata', metadata, nodeId });
+  } catch {
+    // Invalid metadata
   }
 }
 

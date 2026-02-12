@@ -1,4 +1,4 @@
-import { MessageToController, MessageToUI, ViewportType, VIEWPORT_CONFIGS } from '../types';
+import { MessageToController, MessageToUI, ViewportType, VIEWPORT_CONFIGS, ImportMetadata } from '../types';
 import { HTMLParser } from '../parser/html-parser';
 import { fetchUrl } from '../utils/url-fetcher';
 import { parseFile } from '../utils/file-parser';
@@ -8,6 +8,77 @@ import { parseFile } from '../utils/file-parser';
 let selectedViewports: Set<ViewportType> = new Set(['desktop']);
 let uploadedFiles: File[] = [];
 let activeEditorTab: 'html' | 'css' = 'html';
+let selectedNodeId: string | null = null;
+
+// ─── Import Counter ───
+
+const FREE_IMPORT_LIMIT = 10;
+const COUNTER_PERIOD_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+interface ImportCounter {
+  count: number;
+  periodStart: number;
+}
+
+function getImportCounter(): ImportCounter {
+  try {
+    const stored = localStorage.getItem('h2d-import-counter');
+    if (stored) {
+      const counter: ImportCounter = JSON.parse(stored);
+      if (Date.now() - counter.periodStart > COUNTER_PERIOD_MS) {
+        return { count: 0, periodStart: Date.now() };
+      }
+      return counter;
+    }
+  } catch {
+    // Ignore storage errors
+  }
+  return { count: 0, periodStart: Date.now() };
+}
+
+function incrementImportCount(): void {
+  const counter = getImportCounter();
+  counter.count++;
+  try {
+    localStorage.setItem('h2d-import-counter', JSON.stringify(counter));
+  } catch {
+    // Ignore storage errors
+  }
+  updateImportCounterUI(counter);
+}
+
+function updateImportCounterUI(counter?: ImportCounter): void {
+  if (!counter) counter = getImportCounter();
+  const numEl = document.getElementById('import-count-num');
+  const containerEl = document.getElementById('import-counter');
+  if (!numEl || !containerEl) return;
+
+  numEl.textContent = String(counter.count);
+  containerEl.classList.remove('warning', 'limit');
+
+  if (counter.count >= FREE_IMPORT_LIMIT) {
+    containerEl.classList.add('limit');
+  } else if (counter.count >= FREE_IMPORT_LIMIT - 2) {
+    containerEl.classList.add('warning');
+  }
+}
+
+function canImport(): boolean {
+  const counter = getImportCounter();
+  if (counter.count >= FREE_IMPORT_LIMIT) {
+    // Show error on whichever panel is active
+    const activePanel = document.querySelector('.tab-panel.active');
+    if (activePanel) {
+      const status = activePanel.querySelector('.status-message');
+      if (status) {
+        status.className = 'status-message visible error';
+        status.textContent = `Import limit reached (${FREE_IMPORT_LIMIT}/30 days). Upgrade to Pro for unlimited imports.`;
+      }
+    }
+    return false;
+  }
+  return true;
+}
 
 // ─── Post message helper ───
 
@@ -44,7 +115,6 @@ function initViewportSelector(): void {
       const viewport = option.getAttribute('data-viewport') as ViewportType;
 
       if (option.classList.contains('selected')) {
-        // Don't deselect the last one
         if (selectedViewports.size > 1) {
           selectedViewports.delete(viewport);
           option.classList.remove('selected');
@@ -76,17 +146,16 @@ function initUrlImport(): void {
   btn.addEventListener('click', async () => {
     const url = input.value.trim();
     if (!url) return;
+    if (!canImport()) return;
 
     btn.disabled = true;
     showProgress('url-progress', 'Fetching website...', 5);
     hideStatus('url-status');
 
     try {
-      // Fetch the URL content
       showProgress('url-progress', 'Downloading page...', 10);
       const { html, baseUrl } = await fetchUrl(url);
 
-      // Parse for each viewport
       const viewports = Array.from(selectedViewports);
 
       for (let i = 0; i < viewports.length; i++) {
@@ -105,7 +174,6 @@ function initUrlImport(): void {
           type: 'import-dom',
           dom: {
             ...dom,
-            // Pass viewport info via attributes
             attributes: {
               ...dom.attributes,
               'data-viewport': viewport,
@@ -117,6 +185,7 @@ function initUrlImport(): void {
         });
       }
 
+      incrementImportCount();
       showProgress('url-progress', 'Import complete!', 100);
       showStatus('url-status', 'success', `Successfully imported ${url}`);
     } catch (err) {
@@ -137,10 +206,8 @@ function initFileImport(): void {
   const fileList = document.getElementById('file-list')!;
   const btn = document.getElementById('btn-import-file') as HTMLButtonElement;
 
-  // Click to upload
   dropZone.addEventListener('click', () => fileInput.click());
 
-  // Drag and drop
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.classList.add('dragover');
@@ -158,7 +225,6 @@ function initFileImport(): void {
     }
   });
 
-  // File input change
   fileInput.addEventListener('change', () => {
     if (fileInput.files) {
       addFiles(Array.from(fileInput.files));
@@ -167,7 +233,7 @@ function initFileImport(): void {
   });
 
   function addFiles(files: File[]): void {
-    const validExts = ['html', 'htm', 'zip', 'eml', 'emlx', 'msg'];
+    const validExts = ['html', 'htm', 'zip', 'h2d', 'eml', 'emlx', 'msg'];
     for (const file of files) {
       const ext = file.name.split('.').pop()?.toLowerCase();
       if (ext && validExts.includes(ext)) {
@@ -188,9 +254,8 @@ function initFileImport(): void {
       fileList.appendChild(li);
     });
 
-    // Remove handlers
-    fileList.querySelectorAll('.remove-file').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    fileList.querySelectorAll('.remove-file').forEach(removeBtn => {
+      removeBtn.addEventListener('click', (e) => {
         const idx = parseInt((e.target as HTMLElement).getAttribute('data-index')!);
         uploadedFiles.splice(idx, 1);
         renderFileList();
@@ -202,6 +267,7 @@ function initFileImport(): void {
 
   btn.addEventListener('click', async () => {
     if (uploadedFiles.length === 0) return;
+    if (!canImport()) return;
 
     btn.disabled = true;
     showProgress('file-progress', 'Parsing files...', 5);
@@ -231,6 +297,7 @@ function initFileImport(): void {
         }
       }
 
+      incrementImportCount();
       showProgress('file-progress', 'Import complete!', 100);
       showStatus('file-status', 'success', `Successfully imported ${totalImported} file(s)`);
       uploadedFiles = [];
@@ -266,7 +333,6 @@ function initCodeEditor(): void {
     });
   });
 
-  // Tab key support in editors
   [htmlEditor, cssEditor].forEach(editor => {
     editor.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
@@ -287,6 +353,7 @@ function initCodeEditor(): void {
       showStatus('editor-status', 'error', 'Please enter some HTML code');
       return;
     }
+    if (!canImport()) return;
 
     btn.disabled = true;
     showProgress('editor-progress', 'Parsing code...', 10);
@@ -300,6 +367,7 @@ function initCodeEditor(): void {
 
       postMessage({ type: 'import-dom', dom });
 
+      incrementImportCount();
       showProgress('editor-progress', 'Import complete!', 100);
       showStatus('editor-status', 'success', 'Code imported successfully');
     } catch (err) {
@@ -312,10 +380,78 @@ function initCodeEditor(): void {
   });
 }
 
+// ─── Re-import ───
+
+function initReimport(): void {
+  const btn = document.getElementById('btn-reimport') as HTMLButtonElement;
+
+  btn.addEventListener('click', () => {
+    if (!selectedNodeId) return;
+    postMessage({ type: 'reimport', nodeId: selectedNodeId });
+    document.getElementById('reimport-banner')!.classList.remove('visible');
+  });
+}
+
+async function handleReimportMetadata(metadata: ImportMetadata): Promise<void> {
+  if (metadata.sourceUrl) {
+    showProgress('url-progress', 'Re-importing from URL...', 10);
+
+    try {
+      const { html, baseUrl } = await fetchUrl(metadata.sourceUrl);
+      const viewport = metadata.viewport || 'desktop';
+      const config = VIEWPORT_CONFIGS[viewport];
+
+      showProgress('url-progress', `Parsing ${config.name} layout...`, 40);
+
+      const parser = new HTMLParser(baseUrl);
+      const dom = await parser.parse(html, '', config.width, config.height);
+
+      showProgress('url-progress', 'Creating Figma frame...', 70);
+
+      postMessage({
+        type: 'import-dom',
+        dom: {
+          ...dom,
+          attributes: {
+            ...dom.attributes,
+            'data-viewport': viewport,
+            'data-source-url': metadata.sourceUrl,
+            'data-viewport-width': String(config.width),
+            'data-viewport-height': String(config.height),
+          },
+        },
+      });
+
+      showProgress('url-progress', 'Re-import complete!', 100);
+      showStatus('url-status', 'success', `Re-imported ${metadata.sourceUrl}`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Re-import failed';
+      showStatus('url-status', 'error', `Failed to re-import: ${message}`);
+      hideProgress('url-progress');
+    }
+  } else if (metadata.sourceHtml) {
+    showProgress('editor-progress', 'Re-importing from code...', 10);
+
+    try {
+      const parser = new HTMLParser();
+      const dom = await parser.parse(metadata.sourceHtml, metadata.sourceCss || '', 1440, 900);
+
+      showProgress('editor-progress', 'Creating Figma frame...', 60);
+      postMessage({ type: 'import-dom', dom });
+
+      showProgress('editor-progress', 'Re-import complete!', 100);
+      showStatus('editor-status', 'success', 'Re-imported successfully');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Re-import failed';
+      showStatus('editor-status', 'error', `Failed to re-import: ${message}`);
+      hideProgress('editor-progress');
+    }
+  }
+}
+
 // ─── Extension listener ───
 
 function initExtensionListener(): void {
-  // Listen for messages from the Chrome Extension via window.postMessage
   window.addEventListener('message', (event) => {
     const data = event.data;
     if (data && data.source === 'html-to-design-extension') {
@@ -324,8 +460,10 @@ function initExtensionListener(): void {
       dot.parentElement!.querySelector('span')!.textContent = 'Extension connected';
 
       if (data.type === 'dom-capture') {
+        if (!canImport()) return;
         showProgress('extension-progress', 'Processing captured page...', 30);
         postMessage({ type: 'import-dom', dom: data.dom });
+        incrementImportCount();
         showProgress('extension-progress', 'Import complete!', 100);
         showStatus('extension-status-msg', 'success', 'Page captured and imported');
       }
@@ -337,13 +475,9 @@ function initExtensionListener(): void {
 
 function initMcp(): void {
   const btn = document.getElementById('btn-mcp-generate') as HTMLButtonElement;
-  const prompt = document.getElementById('mcp-prompt') as HTMLTextAreaElement;
 
-  // MCP is server-side, so we just provide the UI
-  // The MCP server communicates with the plugin via the extension or direct API
   btn.disabled = true;
 
-  // Listen for MCP connections
   window.addEventListener('message', (event) => {
     const data = event.data;
     if (data && data.source === 'html-to-design-mcp') {
@@ -353,8 +487,10 @@ function initMcp(): void {
       btn.disabled = false;
 
       if (data.type === 'design-generated') {
+        if (!canImport()) return;
         showProgress('mcp-progress', 'Importing AI-generated design...', 50);
         postMessage({ type: 'import-dom', dom: data.dom });
+        incrementImportCount();
         showProgress('mcp-progress', 'Import complete!', 100);
         showStatus('mcp-status-msg', 'success', 'AI design imported');
       }
@@ -401,7 +537,6 @@ window.onmessage = (event) => {
 
   switch (msg.type) {
     case 'import-progress':
-      // Update all visible progress bars
       document.querySelectorAll('.progress-container.visible').forEach(container => {
         container.querySelector('.progress-fill')!.setAttribute('style', `width: ${msg.percent}%`);
         container.querySelector('.progress-text')!.textContent = msg.message;
@@ -419,7 +554,6 @@ window.onmessage = (event) => {
       document.querySelectorAll('.progress-container.visible').forEach(container => {
         container.classList.remove('visible');
       });
-      // Show error on the active panel's status
       const activePanel = document.querySelector('.tab-panel.active');
       if (activePanel) {
         const status = activePanel.querySelector('.status-message');
@@ -430,9 +564,37 @@ window.onmessage = (event) => {
       }
       break;
 
-    case 'selection-change':
-      // Could enable re-import button if selection has import metadata
+    case 'selection-change': {
+      const banner = document.getElementById('reimport-banner')!;
+      const sourceEl = document.getElementById('reimport-source')!;
+
+      if (msg.hasDesignNode && msg.nodeId) {
+        selectedNodeId = msg.nodeId;
+        banner.classList.add('visible');
+        sourceEl.textContent = 'Click Re-import to refresh this design';
+        postMessage({ type: 'get-reimport-metadata', nodeId: msg.nodeId });
+      } else {
+        selectedNodeId = null;
+        banner.classList.remove('visible');
+      }
       break;
+    }
+
+    case 'reimport-metadata': {
+      const sourceEl = document.getElementById('reimport-source');
+      if (sourceEl && msg.metadata) {
+        if (msg.metadata.sourceUrl) {
+          sourceEl.textContent = msg.metadata.sourceUrl;
+        } else {
+          sourceEl.textContent = `Imported ${msg.metadata.importedAt ? new Date(msg.metadata.importedAt).toLocaleDateString() : ''}`;
+        }
+      }
+      // If this came from a re-import request (frame was removed), handle re-fetch
+      if (msg.metadata && (msg.metadata as any).reimportX !== undefined) {
+        handleReimportMetadata(msg.metadata);
+      }
+      break;
+    }
   }
 };
 
@@ -444,9 +606,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initUrlImport();
   initFileImport();
   initCodeEditor();
+  initReimport();
   initExtensionListener();
   initMcp();
+  updateImportCounterUI();
 
-  // Request initial resize
   postMessage({ type: 'resize', width: 360, height: 480 });
 });
