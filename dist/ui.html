@@ -1,10 +1,8 @@
-<!doctype html><html><head><meta charset="utf-8"><style>/* ─── Reset & Base ─── */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<!doctype html><html><head><meta charset="utf-8"><style>* { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #ffffff;
       --bg-secondary: #f5f5f5;
-      --bg-hover: #ebebeb;
       --text: #333333;
       --text-secondary: #666666;
       --text-tertiary: #999999;
@@ -14,7 +12,6 @@
       --primary-light: #e8f4fd;
       --success: #1bc47d;
       --error: #f24822;
-      --warning: #ffb020;
       --radius: 6px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -25,56 +22,20 @@
       color: var(--text);
       background: var(--bg);
       height: 100%;
-      overflow: hidden;
     }
 
-    /* ─── Layout ─── */
     .app {
       display: flex;
       flex-direction: column;
       height: 100%;
-    }
-
-    /* ─── Tab Bar ─── */
-    .tab-bar {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-      flex-shrink: 0;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 10px 8px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .tab:hover { color: var(--text); background: var(--bg-secondary); }
-
-    .tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    /* ─── Tab Content ─── */
-    .tab-content {
-      flex: 1;
-      overflow-y: auto;
       padding: 16px;
+      gap: 16px;
     }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ─── Form Elements ─── */
-    .field { margin-bottom: 12px; }
+    h2 {
+      font-size: 14px;
+      font-weight: 700;
+    }
 
     .field label {
       display: block;
@@ -84,33 +45,29 @@
       margin-bottom: 6px;
     }
 
-    input[type="text"], input[type="url"], textarea {
+    input[type="url"] {
       width: 100%;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       font-family: var(--font);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text);
       background: var(--bg);
       outline: none;
       transition: border-color 0.15s;
     }
 
-    input:focus, textarea:focus {
+    input:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 1px var(--primary);
     }
 
-    input::placeholder, textarea::placeholder {
-      color: var(--text-tertiary);
-    }
+    input::placeholder { color: var(--text-tertiary); }
 
-    /* ─── Viewport Selector ─── */
     .viewport-selector {
       display: flex;
       gap: 8px;
-      margin-bottom: 12px;
     }
 
     .viewport-option {
@@ -137,133 +94,30 @@
     .viewport-option svg { width: 24px; height: 24px; fill: var(--text-secondary); }
     .viewport-option.selected svg { fill: var(--primary); }
 
-    .viewport-option span {
-      font-size: 10px;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
+    .viewport-option span { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
     .viewport-option.selected span { color: var(--primary); }
+    .viewport-option .size { font-size: 9px; color: var(--text-tertiary); }
+    .viewport-option.selected .size { color: var(--primary); }
 
-    /* ─── Buttons ─── */
     .btn {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: var(--radius);
       font-family: var(--font);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-primary {
       background: var(--primary);
       color: white;
+      transition: background 0.15s;
     }
 
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-primary:disabled { background: var(--border); cursor: not-allowed; }
+    .btn:hover { background: var(--primary-hover); }
+    .btn:disabled { background: var(--border); cursor: not-allowed; }
 
-    .btn-secondary {
-      background: var(--bg-secondary);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover { background: var(--bg-hover); }
-
-    /* ─── File Upload ─── */
-    .file-drop {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.15s;
-      margin-bottom: 12px;
-    }
-
-    .file-drop:hover, .file-drop.dragover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .file-drop p { color: var(--text-secondary); font-size: 11px; margin-top: 6px; }
-    .file-drop .file-icon { font-size: 24px; color: var(--text-tertiary); }
-
-    .file-drop input[type="file"] { display: none; }
-
-    .file-list {
-      list-style: none;
-      margin-bottom: 12px;
-    }
-
-    .file-list li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 8px;
-      background: var(--bg-secondary);
-      border-radius: 4px;
-      margin-bottom: 4px;
-      font-size: 11px;
-    }
-
-    .file-list .remove-file {
-      cursor: pointer;
-      color: var(--error);
-      font-weight: 600;
-    }
-
-    /* ─── Code Editor ─── */
-    .editor-container {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .editor-tabs {
-      display: flex;
-      gap: 4px;
-    }
-
-    .editor-tab {
-      padding: 4px 12px;
-      font-size: 11px;
-      border: 1px solid var(--border);
-      border-radius: 4px 4px 0 0;
-      cursor: pointer;
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
-    }
-
-    .editor-tab.active {
-      background: var(--bg);
-      border-bottom-color: var(--bg);
-      color: var(--text);
-    }
-
-    .code-editor {
-      width: 100%;
-      height: 200px;
-      font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
-      font-size: 11px;
-      line-height: 1.5;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 0 var(--radius) var(--radius) var(--radius);
-      resize: vertical;
-      tab-size: 2;
-      color: var(--text);
-      background: var(--bg-secondary);
-    }
-
-    /* ─── Progress Bar ─── */
     .progress-container {
       display: none;
-      margin-top: 12px;
     }
 
     .progress-container.visible { display: block; }
@@ -290,158 +144,21 @@
       text-align: center;
     }
 
-    /* ─── Status Messages ─── */
     .status-message {
       display: none;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: var(--radius);
       font-size: 11px;
-      margin-top: 8px;
     }
 
     .status-message.visible { display: block; }
     .status-message.success { background: #e6f9f0; color: #0d6e3f; }
     .status-message.error { background: #fdecea; color: #b71c1c; }
-    .status-message.info { background: var(--primary-light); color: #0d47a1; }
 
-    /* ─── MCP Section ─── */
-    .mcp-info {
-      padding: 12px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      margin-bottom: 12px;
-    }
+    .spacer { flex: 1; }
 
-    .mcp-info h4 {
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .mcp-info p {
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-
-    .mcp-info code {
-      display: block;
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 8px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 10px;
-      white-space: pre;
-      overflow-x: auto;
-      margin-top: 6px;
-    }
-
-    .mcp-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px;
-      background: var(--bg);
-      border-radius: 4px;
-      font-size: 11px;
-    }
-
-    .mcp-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-tertiary);
-    }
-
-    .mcp-dot.connected { background: var(--success); }
-
-    /* ─── Extension Section ─── */
-    .extension-info {
-      padding: 12px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-    }
-
-    .extension-info h4 { font-size: 12px; margin-bottom: 6px; }
-
-    .extension-info p {
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-
-    .extension-steps {
-      list-style: decimal;
-      padding-left: 20px;
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.8;
-    }
-
-    /* ─── Re-import Banner ─── */
-    .reimport-banner {
-      display: none;
-      padding: 10px 16px;
-      background: var(--primary-light);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .reimport-banner.visible { display: flex; }
-
-    .reimport-banner .reimport-info {
-      flex: 1;
-      font-size: 11px;
-      color: var(--text);
-    }
-
-    .reimport-banner .reimport-info small {
-      display: block;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    .reimport-banner .btn-reimport {
-      padding: 6px 12px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .reimport-banner .btn-reimport:hover { background: var(--primary-hover); }
-
-    /* ─── Import Counter ─── */
-    .import-counter { font-size: 10px; }
-    .import-counter .count { font-weight: 600; }
-    .import-counter.warning .count { color: var(--warning); }
-    .import-counter.limit .count { color: var(--error); }
-
-    /* ─── Footer ─── */
     .footer {
-      flex-shrink: 0;
-      padding: 8px 16px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-size: 10px;
       color: var(--text-tertiary);
-    }
-
-    .footer a { color: var(--primary); text-decoration: none; }</style></head><body><div class="app"><div class="reimport-banner" id="reimport-banner"><div class="reimport-info"><strong>Imported frame selected</strong> <small id="reimport-source"></small></div><button class="btn-reimport" id="btn-reimport">Re-import</button></div><div class="tab-bar"><div class="tab active" data-tab="url">URL</div><div class="tab" data-tab="file">File</div><div class="tab" data-tab="editor">Editor</div><div class="tab" data-tab="extension">Extension</div><div class="tab" data-tab="mcp">MCP</div></div><div class="tab-content"><div class="tab-panel active" id="panel-url"><div class="field"><label for="url-input">Website URL</label> <input type="url" id="url-input" placeholder="https://example.com"/></div><div class="field"><label>Viewport(s)</label><div class="viewport-selector"><div class="viewport-option selected" data-viewport="desktop"><svg viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg> <span>Desktop</span> <span style="font-size:9px;color:var(--text-tertiary)">1440px</span></div><div class="viewport-option" data-viewport="tablet"><svg viewBox="0 0 24 24"><path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"/></svg> <span>Tablet</span> <span style="font-size:9px;color:var(--text-tertiary)">768px</span></div><div class="viewport-option" data-viewport="mobile"><svg viewBox="0 0 24 24"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"/></svg> <span>Mobile</span> <span style="font-size:9px;color:var(--text-tertiary)">375px</span></div></div></div><button class="btn btn-primary" id="btn-import-url" disabled="disabled">Import Website</button><div class="progress-container" id="url-progress"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Preparing...</div></div><div class="status-message" id="url-status"></div></div><div class="tab-panel" id="panel-file"><div class="file-drop" id="file-drop"><div class="file-icon">&#128196;</div><p>Drop files here or click to upload</p><p style="margin-top:4px; font-size:10px">.html, .htm, .zip, .h2d, .eml, .emlx, .msg</p><input type="file" id="file-input" accept=".html,.htm,.zip,.h2d,.eml,.emlx,.msg" multiple="multiple"/></div><ul class="file-list" id="file-list"></ul><button class="btn btn-primary" id="btn-import-file" disabled="disabled">Import Files</button><div class="progress-container" id="file-progress"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Preparing...</div></div><div class="status-message" id="file-status"></div></div><div class="tab-panel" id="panel-editor"><div class="editor-container"><div class="editor-tabs"><div class="editor-tab active" data-editor="html">HTML</div><div class="editor-tab" data-editor="css">CSS</div></div><textarea class="code-editor" id="html-editor" placeholder="<!-- Paste your HTML here -->
-<div style=&quot;padding: 20px;&quot;>
-  <h1>Hello World</h1>
-  <p>Your design starts here.</p>
-</div>"></textarea> <textarea class="code-editor" id="css-editor" style="display: none;" placeholder="/* Add your CSS styles here */
-body {
-  font-family: sans-serif;
-}"></textarea></div><div style="margin-top: 12px"><button class="btn btn-primary" id="btn-import-code">Import Code</button></div><div class="progress-container" id="editor-progress"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Preparing...</div></div><div class="status-message" id="editor-status"></div></div><div class="tab-panel" id="panel-extension"><div class="extension-info"><h4>Chrome Extension</h4><p>Import authenticated or private websites using our companion Chrome Extension.</p><ol class="extension-steps"><li>Install the HTML to Design Chrome Extension</li><li>Navigate to the page you want to import</li><li>Click the extension icon to capture the page</li><li>The design will appear in Figma automatically</li></ol></div><div style="margin-top: 12px;"><div class="mcp-status" id="extension-status"><div class="mcp-dot" id="extension-dot"></div><span>Waiting for extension connection...</span></div></div><div class="progress-container" id="extension-progress"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Preparing...</div></div><div class="status-message" id="extension-status-msg"></div></div><div class="tab-panel" id="panel-mcp"><div class="mcp-info"><h4>AI-Powered Design via MCP</h4><p>Connect AI tools like Claude Desktop or Cursor to generate and import designs directly into Figma.</p><p><strong>MCP Server Configuration:</strong></p><code>{ "mcpServers": { "html-to-design": { "command": "npx", "args": ["html-to-design-mcp"] } } }</code></div><div style="margin-top: 12px;"><div class="mcp-status" id="mcp-status"><div class="mcp-dot" id="mcp-dot"></div><span>MCP server not connected</span></div></div><div class="field" style="margin-top: 12px;"><label for="mcp-prompt">AI Prompt (optional)</label> <textarea id="mcp-prompt" style="height: 80px;" placeholder="Describe the design you want AI to generate..."></textarea></div><button class="btn btn-primary" id="btn-mcp-generate" disabled="disabled">Generate with AI</button><div class="progress-container" id="mcp-progress"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Preparing...</div></div><div class="status-message" id="mcp-status-msg"></div></div></div><div class="footer"><span>HTML to Design v1.0</span> <span class="import-counter" id="import-counter"><span class="count" id="import-count-num">0</span>/10 imports (Free)</span></div></div><script defer="defer">(()=>{"use strict";const e={desktop:{name:"Desktop",width:1440,height:900},mobile:{name:"Mobile",width:375,height:812},tablet:{name:"Tablet",width:768,height:1024}};class t{constructor(e=""){this.iframe=null,this.baseUrl=e}async parse(e,t="",r=1440,s=900){const o=await this.createSandboxIframe(r,s),n=o.contentDocument;if(this.baseUrl){const e=n.createElement("base");e.href=this.baseUrl,n.head.appendChild(e)}const i=this.buildFullDocument(e,t);n.open(),n.write(i),n.close(),await this.waitForLoad(o);const a=n.body,c=(a.getBoundingClientRect(),this.serializeDOM(a,n));return this.destroyIframe(),c}buildFullDocument(e,t){return e.toLowerCase().includes("<html")||e.toLowerCase().includes("<!doctype")?t?e.replace("</head>",`<style>${t}</style></head>`):e:`<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <style>\n    * { box-sizing: border-box; }\n    body { margin: 0; padding: 0; }\n    ${t}\n  </style>\n</head>\n<body>\n  ${e}\n</body>\n</html>`}createSandboxIframe(e,t){return new Promise(r=>{this.iframe&&this.destroyIframe();const s=document.createElement("iframe");s.style.position="fixed",s.style.left="-10000px",s.style.top="-10000px",s.style.width=`${e}px`,s.style.height=`${t}px`,s.style.border="none",s.style.visibility="hidden",s.sandbox.add("allow-same-origin"),document.body.appendChild(s),this.iframe=s,setTimeout(()=>r(s),50)})}waitForLoad(e){return new Promise(t=>{const r=e.contentDocument.querySelectorAll("img"),s=Array.from(r).map(e=>e.complete?Promise.resolve():new Promise(t=>{e.onload=()=>t(),e.onerror=()=>t(),setTimeout(t,3e3)}));Promise.all(s).then(()=>{setTimeout(t,200)})})}serializeDOM(e,t){const r=e.getBoundingClientRect(),s=t.defaultView.getComputedStyle(e);return{tag:e.tagName.toLowerCase(),attributes:this.getAttributes(e),computedStyle:this.extractStyles(s),boundingBox:{x:r.left,y:r.top,width:r.width,height:r.height},children:this.serializeChildren(e,t)}}serializeChildren(e,t){var r;const s=[];for(const o of Array.from(e.childNodes))if(o.nodeType===Node.ELEMENT_NODE){const e=o,r=e.tagName.toLowerCase(),n=t.defaultView.getComputedStyle(e);if("none"===n.display||"hidden"===n.visibility)continue;if("script"===r||"style"===r||"link"===r||"meta"===r||"noscript"===r)continue;const i=e.getBoundingClientRect();if(0===i.width&&0===i.height)continue;const a={type:"element",tag:r,attributes:this.getAttributes(e),computedStyle:this.extractStyles(n),boundingBox:{x:i.left,y:i.top,width:i.width,height:i.height},children:this.serializeChildren(e,t)};s.push(a)}else if(o.nodeType===Node.TEXT_NODE){const n=null===(r=o.textContent)||void 0===r?void 0:r.trim();if(!n)continue;const i=t.createRange();i.selectNodeContents(o);const a=i.getBoundingClientRect();if(0===a.width&&0===a.height)continue;const c=t.defaultView.getComputedStyle(e);s.push({type:"text",content:n,computedStyle:this.extractStyles(c),boundingBox:{x:a.left,y:a.top,width:a.width,height:a.height}})}return s}getAttributes(e){const t={};for(const r of Array.from(e.attributes))t[r.name]=r.value;return t}extractStyles(e){const t=["display","position","flexDirection","justifyContent","alignItems","flexWrap","gap","rowGap","columnGap","width","height","minWidth","minHeight","maxWidth","maxHeight","paddingTop","paddingRight","paddingBottom","paddingLeft","marginTop","marginRight","marginBottom","marginLeft","top","right","bottom","left","zIndex","fontFamily","fontSize","fontWeight","fontStyle","lineHeight","letterSpacing","textAlign","textDecoration","textTransform","color","backgroundColor","backgroundImage","backgroundSize","backgroundPosition","borderTopWidth","borderRightWidth","borderBottomWidth","borderLeftWidth","borderTopColor","borderRightColor","borderBottomColor","borderLeftColor","borderTopStyle","borderRightStyle","borderBottomStyle","borderLeftStyle","borderTopLeftRadius","borderTopRightRadius","borderBottomRightRadius","borderBottomLeftRadius","opacity","boxShadow","overflow","visibility","objectFit"],r={};for(const s of t){const t=e.getPropertyValue(this.camelToKebab(s));t&&""!==t&&"none"!==t&&"normal"!==t&&"auto"!==t&&(r[s]=t)}return r.display=e.getPropertyValue("display"),r.position=e.getPropertyValue("position"),r}camelToKebab(e){return e.replace(/[A-Z]/g,e=>`-${e.toLowerCase()}`)}destroyIframe(){this.iframe&&this.iframe.parentNode&&(this.iframe.parentNode.removeChild(this.iframe),this.iframe=null)}}async function r(e){e.startsWith("http://")||e.startsWith("https://")||(e="https://"+e);const t=await fetch(e,{method:"GET",headers:{Accept:"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","Accept-Language":"en-US,en;q=0.5"}});if(!t.ok)throw new Error(`Failed to fetch URL: ${t.status} ${t.statusText}`);const r=await t.text(),s=t.url||e,o=new URL(s).origin,n=r.match(/<title[^>]*>([^<]*)<\/title>/i),i=n?n[1].trim():void 0,a=function(e,t){const r=new URL(t);return e=e.replace(/(src|href|action)=["'](?!data:)(?!#)(?!javascript:)(?!mailto:)(?!tel:)([^"']+)["']/gi,(e,t,s)=>{try{return`${t}="${new URL(s,r).href}"`}catch(t){return e}}),e=e.replace(/url\(["']?(?!data:)([^"')]+)["']?\)/gi,(e,t)=>{try{return`url("${new URL(t.trim(),r).href}")`}catch(t){return e}}),e}(r,s);return{html:a,baseUrl:o,title:i}}async function s(e){var t;const r=(null===(t=e.name.split(".").pop())||void 0===t?void 0:t.toLowerCase())||"";switch(r){case"html":case"htm":return[await o(e)];case"zip":return async function(e){const t=window.JSZip;if(!t)throw new Error("ZIP support requires JSZip library");const r=await t.loadAsync(await e.arrayBuffer()),s=Object.keys(r.files);if(s.some(e=>"stitch.json"===e||e.endsWith("/stitch.json")))return async function(e,t){const r=[],s=t.find(e=>"stitch.json"===e||e.endsWith("/stitch.json"));let o=null;if(s)try{const t=await e.files[s].async("string");o=JSON.parse(t)}catch(e){}if((null==o?void 0:o.pages)&&Array.isArray(o.pages))for(const t of o.pages){const s=t.html||t.path;if(s&&e.files[s]){const o=await e.files[s].async("string");let n="";t.css&&e.files[t.css]&&(n=await e.files[t.css].async("string")),r.push({html:o,css:n,fileName:t.name||s})}}if(0===r.length){const s=t.filter(e=>e.endsWith(".html")||e.endsWith(".htm")),o=t.filter(e=>e.endsWith(".css"));let n="";for(const t of o)n+=await e.files[t].async("string")+"\n";for(const t of s)r.push({html:await e.files[t].async("string"),css:n,fileName:t})}if(0===r.length)throw new Error("No importable pages found in Google Stitch export");return r}(r,s);const o=[],n=s.filter(e=>e.endsWith(".html")||e.endsWith(".htm"));if(0===n.length)throw new Error("No HTML files found in ZIP archive");const i=s.filter(e=>e.endsWith(".css"));let a="";for(const e of i)a+=await r.files[e].async("string")+"\n";for(const e of n){const t=await r.files[e].async("string");o.push({html:t,css:a,fileName:e})}return o}(e);case"h2d":return async function(e){const t=await l(e);let r;try{r=JSON.parse(t)}catch(e){throw new Error("Invalid .h2d file: not valid JSON")}const s=[];if(Array.isArray(r))for(const t of r)t.html&&s.push({html:t.html,css:t.css||"",fileName:t.name||t.fileName||e.name});else if(r.pages&&Array.isArray(r.pages))for(const t of r.pages)t.html&&s.push({html:t.html,css:t.css||r.css||"",fileName:t.name||t.fileName||e.name});else r.html&&s.push({html:r.html,css:r.css||"",fileName:r.name||e.name});if(0===s.length)throw new Error("No HTML content found in .h2d file");return s}(e);case"eml":case"emlx":return[await n(e)];case"msg":return[await i(e)];default:throw new Error(`Unsupported file format: .${r}`)}}async function o(e){return{html:await l(e),css:"",fileName:e.name}}async function n(e){return{html:function(e){const t=e.match(/boundary="?([^"\s;]+)"?/);if(t){const r=t[1],s=e.split(`--${r}`);for(const e of s)if(e.includes("Content-Type: text/html")||e.includes("content-type: text/html")){const t=e.indexOf("\n\n");if(-1===t)continue;let r=e.substring(t+2).trim();if(e.includes("base64"))try{r=atob(r.replace(/\s/g,""))}catch(e){}else e.includes("quoted-printable")&&(r=a(r));return r}for(const e of s)if(e.includes("Content-Type: text/plain")||e.includes("content-type: text/plain")){const t=e.indexOf("\n\n");if(-1===t)continue;return`<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; white-space: pre-wrap;">${c(e.substring(t+2).trim())}</div>`}}const r=e.match(/<html[\s\S]*?<\/html>/i);if(r)return r[0];const s=e.indexOf("\n\n");return`<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; white-space: pre-wrap;">${c(s>0?e.substring(s+2):e)}</div>`}(await l(e)),css:"",fileName:e.name}}async function i(e){const t=await e.arrayBuffer(),r=new TextDecoder("utf-8").decode(t),s=r.match(/<html[\s\S]*?<\/html>/i);return s?{html:s[0],css:"",fileName:e.name}:{html:`<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto;">${r.replace(/[^\x20-\x7E\n\r\t]/g,"").replace(/\n/g,"<br>")}</div>`,css:"",fileName:e.name}}function a(e){return e.replace(/=\r?\n/g,"").replace(/=([0-9A-Fa-f]{2})/g,(e,t)=>String.fromCharCode(parseInt(t,16)))}function c(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function l(e){return new Promise((t,r)=>{const s=new FileReader;s.onload=()=>t(s.result),s.onerror=r,s.readAsText(e)})}let d=new Set(["desktop"]),m=[],u="html",p=null;function g(){try{const e=localStorage.getItem("h2d-import-counter");if(e){const t=JSON.parse(e);return Date.now()-t.periodStart>2592e6?{count:0,periodStart:Date.now()}:t}}catch(e){}return{count:0,periodStart:Date.now()}}function f(){const e=g();e.count++;try{localStorage.setItem("h2d-import-counter",JSON.stringify(e))}catch(e){}h(e)}function h(e){e||(e=g());const t=document.getElementById("import-count-num"),r=document.getElementById("import-counter");t&&r&&(t.textContent=String(e.count),r.classList.remove("warning","limit"),e.count>=10?r.classList.add("limit"):e.count>=8&&r.classList.add("warning"))}function y(){if(g().count>=10){const e=document.querySelector(".tab-panel.active");if(e){const t=e.querySelector(".status-message");t&&(t.className="status-message visible error",t.textContent="Import limit reached (10/30 days). Upgrade to Pro for unlimited imports.")}return!1}return!0}function b(e){parent.postMessage({pluginMessage:e},"*")}function w(e,t,r){const s=document.getElementById(e);s.classList.add("visible"),s.querySelector(".progress-fill").setAttribute("style",`width: ${r}%`),s.querySelector(".progress-text").textContent=t}function v(e){document.getElementById(e).classList.remove("visible")}function x(e,t,r){const s=document.getElementById(e);s.className=`status-message visible ${t}`,s.textContent=r}function E(e){document.getElementById(e).classList.remove("visible")}window.onmessage=s=>{const o=s.data.pluginMessage;if(o)switch(o.type){case"import-progress":document.querySelectorAll(".progress-container.visible").forEach(e=>{e.querySelector(".progress-fill").setAttribute("style",`width: ${o.percent}%`),e.querySelector(".progress-text").textContent=o.message});break;case"import-complete":document.querySelectorAll(".progress-container.visible").forEach(e=>{e.querySelector(".progress-fill").setAttribute("style","width: 100%"),e.querySelector(".progress-text").textContent="Import complete!"});break;case"import-error":document.querySelectorAll(".progress-container.visible").forEach(e=>{e.classList.remove("visible")});const s=document.querySelector(".tab-panel.active");if(s){const e=s.querySelector(".status-message");e&&(e.className="status-message visible error",e.textContent=o.message)}break;case"selection-change":{const e=document.getElementById("reimport-banner"),t=document.getElementById("reimport-source");o.hasDesignNode&&o.nodeId?(p=o.nodeId,e.classList.add("visible"),t.textContent="Click Re-import to refresh this design",b({type:"get-reimport-metadata",nodeId:o.nodeId})):(p=null,e.classList.remove("visible"));break}case"reimport-metadata":{const s=document.getElementById("reimport-source");s&&o.metadata&&(o.metadata.sourceUrl?s.textContent=o.metadata.sourceUrl:s.textContent=`Imported ${o.metadata.importedAt?new Date(o.metadata.importedAt).toLocaleDateString():""}`),o.metadata&&void 0!==o.metadata.reimportX&&async function(s){if(s.sourceUrl){w("url-progress","Re-importing from URL...",10);try{const{html:o,baseUrl:n}=await r(s.sourceUrl),i=s.viewport||"desktop",a=e[i];w("url-progress",`Parsing ${a.name} layout...`,40);const c=new t(n),l=await c.parse(o,"",a.width,a.height);w("url-progress","Creating Figma frame...",70),b({type:"import-dom",dom:Object.assign(Object.assign({},l),{attributes:Object.assign(Object.assign({},l.attributes),{"data-viewport":i,"data-source-url":s.sourceUrl,"data-viewport-width":String(a.width),"data-viewport-height":String(a.height)})})}),w("url-progress","Re-import complete!",100),x("url-status","success",`Re-imported ${s.sourceUrl}`)}catch(e){x("url-status","error",`Failed to re-import: ${e instanceof Error?e.message:"Re-import failed"}`),v("url-progress")}}else if(s.sourceHtml){w("editor-progress","Re-importing from code...",10);try{const e=new t,r=await e.parse(s.sourceHtml,s.sourceCss||"",1440,900);w("editor-progress","Creating Figma frame...",60),b({type:"import-dom",dom:r}),w("editor-progress","Re-import complete!",100),x("editor-status","success","Re-imported successfully")}catch(e){x("editor-status","error",`Failed to re-import: ${e instanceof Error?e.message:"Re-import failed"}`),v("editor-progress")}}}(o.metadata);break}}},document.addEventListener("DOMContentLoaded",()=>{!function(){const e=document.querySelectorAll(".tab"),t=document.querySelectorAll(".tab-panel");e.forEach(r=>{r.addEventListener("click",()=>{var s;const o=r.getAttribute("data-tab");e.forEach(e=>e.classList.remove("active")),t.forEach(e=>e.classList.remove("active")),r.classList.add("active"),null===(s=document.getElementById(`panel-${o}`))||void 0===s||s.classList.add("active")})})}(),document.querySelectorAll(".viewport-option").forEach(e=>{e.addEventListener("click",()=>{const t=e.getAttribute("data-viewport");e.classList.contains("selected")?d.size>1&&(d.delete(t),e.classList.remove("selected")):(d.add(t),e.classList.add("selected"))})}),function(){const s=document.getElementById("url-input"),o=document.getElementById("btn-import-url");s.addEventListener("input",()=>{o.disabled=!s.value.trim()}),s.addEventListener("keydown",e=>{"Enter"!==e.key||o.disabled||o.click()}),o.addEventListener("click",async()=>{const n=s.value.trim();if(n&&y()){o.disabled=!0,w("url-progress","Fetching website...",5),E("url-status");try{w("url-progress","Downloading page...",10);const{html:s,baseUrl:o}=await r(n),i=Array.from(d);for(let r=0;r<i.length;r++){const a=i[r],c=e[a],l=10+r/i.length*70;w("url-progress",`Parsing ${c.name} layout...`,l);const d=new t(o),m=await d.parse(s,"",c.width,c.height);w("url-progress",`Creating ${c.name} Figma frame...`,l+30),b({type:"import-dom",dom:Object.assign(Object.assign({},m),{attributes:Object.assign(Object.assign({},m.attributes),{"data-viewport":a,"data-source-url":n,"data-viewport-width":String(c.width),"data-viewport-height":String(c.height)})})})}f(),w("url-progress","Import complete!",100),x("url-status","success",`Successfully imported ${n}`)}catch(e){x("url-status","error",`Failed to import: ${e instanceof Error?e.message:"Unknown error occurred"}`),v("url-progress")}finally{o.disabled=!1}}})}(),function(){const e=document.getElementById("file-drop"),r=document.getElementById("file-input"),o=document.getElementById("file-list"),n=document.getElementById("btn-import-file");function i(e){var t;const r=["html","htm","zip","h2d","eml","emlx","msg"];for(const s of e){const e=null===(t=s.name.split(".").pop())||void 0===t?void 0:t.toLowerCase();e&&r.includes(e)&&m.push(s)}a()}function a(){o.innerHTML="",m.forEach((e,t)=>{const r=document.createElement("li");var s;r.innerHTML=`\n        <span>${e.name} (${s=e.size,s<1024?s+" B":s<1048576?(s/1024).toFixed(1)+" KB":(s/1048576).toFixed(1)+" MB"})</span>\n        <span class="remove-file" data-index="${t}">&times;</span>\n      `,o.appendChild(r)}),o.querySelectorAll(".remove-file").forEach(e=>{e.addEventListener("click",e=>{const t=parseInt(e.target.getAttribute("data-index"));m.splice(t,1),a()})}),n.disabled=0===m.length}e.addEventListener("click",()=>r.click()),e.addEventListener("dragover",t=>{t.preventDefault(),e.classList.add("dragover")}),e.addEventListener("dragleave",()=>{e.classList.remove("dragover")}),e.addEventListener("drop",t=>{var r;t.preventDefault(),e.classList.remove("dragover"),(null===(r=t.dataTransfer)||void 0===r?void 0:r.files)&&i(Array.from(t.dataTransfer.files))}),r.addEventListener("change",()=>{r.files&&i(Array.from(r.files)),r.value=""}),n.addEventListener("click",async()=>{if(0!==m.length&&y()){n.disabled=!0,w("file-progress","Parsing files...",5),E("file-status");try{let e=0;for(let r=0;r<m.length;r++){const o=m[r],n=r/m.length*80;w("file-progress",`Processing ${o.name}...`,10+n);const i=await s(o);for(const r of i){const s=new t,o=await s.parse(r.html,r.css,1440,900);o.attributes=Object.assign(Object.assign({},o.attributes),{"data-source-file":r.fileName}),b({type:"import-dom",dom:o}),e++}}f(),w("file-progress","Import complete!",100),x("file-status","success",`Successfully imported ${e} file(s)`),m=[],a()}catch(e){x("file-status","error",`Failed to import: ${e instanceof Error?e.message:"Unknown error occurred"}`),v("file-progress")}finally{n.disabled=!1}}})}(),function(){const e=document.getElementById("html-editor"),r=document.getElementById("css-editor"),s=document.querySelectorAll(".editor-tab"),o=document.getElementById("btn-import-code");s.forEach(t=>{t.addEventListener("click",()=>{const o=t.getAttribute("data-editor");u=o,s.forEach(e=>e.classList.remove("active")),t.classList.add("active"),e.style.display="html"===o?"block":"none",r.style.display="css"===o?"block":"none"})}),[e,r].forEach(e=>{e.addEventListener("keydown",t=>{if("Tab"===t.key){t.preventDefault();const r=e.selectionStart,s=e.selectionEnd;e.value=e.value.substring(0,r)+"  "+e.value.substring(s),e.selectionStart=e.selectionEnd=r+2}})}),o.addEventListener("click",async()=>{const s=e.value.trim(),n=r.value.trim();if(s){if(y()){o.disabled=!0,w("editor-progress","Parsing code...",10),E("editor-status");try{const e=new t,r=await e.parse(s,n,1440,900);w("editor-progress","Creating Figma frame...",60),b({type:"import-dom",dom:r}),f(),w("editor-progress","Import complete!",100),x("editor-status","success","Code imported successfully")}catch(e){x("editor-status","error",`Failed to import: ${e instanceof Error?e.message:"Unknown error occurred"}`),v("editor-progress")}finally{o.disabled=!1}}}else x("editor-status","error","Please enter some HTML code")})}(),document.getElementById("btn-reimport").addEventListener("click",()=>{p&&(b({type:"reimport",nodeId:p}),document.getElementById("reimport-banner").classList.remove("visible"))}),window.addEventListener("message",e=>{const t=e.data;if(t&&"html-to-design-extension"===t.source){const e=document.getElementById("extension-dot");if(e.classList.add("connected"),e.parentElement.querySelector("span").textContent="Extension connected","dom-capture"===t.type){if(!y())return;w("extension-progress","Processing captured page...",30),b({type:"import-dom",dom:t.dom}),f(),w("extension-progress","Import complete!",100),x("extension-status-msg","success","Page captured and imported")}}}),function(){const e=document.getElementById("btn-mcp-generate");e.disabled=!0,window.addEventListener("message",t=>{const r=t.data;if(r&&"html-to-design-mcp"===r.source){const t=document.getElementById("mcp-dot");if(t.classList.add("connected"),t.parentElement.querySelector("span").textContent="MCP server connected",e.disabled=!1,"design-generated"===r.type){if(!y())return;w("mcp-progress","Importing AI-generated design...",50),b({type:"import-dom",dom:r.dom}),f(),w("mcp-progress","Import complete!",100),x("mcp-status-msg","success","AI design imported")}}})}(),h(),b({type:"resize",width:360,height:480})})})();</script></body></html>
+      text-align: center;
+    }</style></head><body><div class="app"><h2>HTML to Design</h2><div class="field"><label for="url-input">Website URL</label> <input type="url" id="url-input" placeholder="https://example.com" autofocus/></div><div class="field"><label>Viewport</label><div class="viewport-selector"><div class="viewport-option selected" data-viewport="desktop"><svg viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg> <span>Desktop</span> <span class="size">1440px</span></div><div class="viewport-option" data-viewport="tablet"><svg viewBox="0 0 24 24"><path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"/></svg> <span>Tablet</span> <span class="size">768px</span></div><div class="viewport-option" data-viewport="mobile"><svg viewBox="0 0 24 24"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"/></svg> <span>Mobile</span> <span class="size">375px</span></div></div></div><button class="btn" id="btn-import" disabled="disabled">Import Website</button><div class="progress-container" id="progress"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Preparing...</div></div><div class="status-message" id="status"></div><div class="spacer"></div><div class="footer">HTML to Design v1.0</div></div><script defer="defer">(()=>{"use strict";const t={desktop:{name:"Desktop",width:1440,height:900},mobile:{name:"Mobile",width:375,height:812},tablet:{name:"Tablet",width:768,height:1024}};class e{constructor(t=""){this.iframe=null,this.baseUrl=t}async parse(t,e="",i=1440,o=900){const r=await this.createSandboxIframe(i,o),n=r.contentDocument;if(this.baseUrl){const t=n.createElement("base");t.href=this.baseUrl,n.head.appendChild(t)}const s=this.buildFullDocument(t,e);n.open(),n.write(s),n.close(),await this.waitForLoad(r);const a=n.body,l=(a.getBoundingClientRect(),this.serializeDOM(a,n));return this.destroyIframe(),l}buildFullDocument(t,e){return t.toLowerCase().includes("<html")||t.toLowerCase().includes("<!doctype")?e?t.replace("</head>",`<style>${e}</style></head>`):t:`<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <style>\n    * { box-sizing: border-box; }\n    body { margin: 0; padding: 0; }\n    ${e}\n  </style>\n</head>\n<body>\n  ${t}\n</body>\n</html>`}createSandboxIframe(t,e){return new Promise(i=>{this.iframe&&this.destroyIframe();const o=document.createElement("iframe");o.style.position="fixed",o.style.left="-10000px",o.style.top="-10000px",o.style.width=`${t}px`,o.style.height=`${e}px`,o.style.border="none",o.style.visibility="hidden",o.sandbox.add("allow-same-origin"),document.body.appendChild(o),this.iframe=o,setTimeout(()=>i(o),50)})}waitForLoad(t){return new Promise(e=>{const i=t.contentDocument.querySelectorAll("img"),o=Array.from(i).map(t=>t.complete?Promise.resolve():new Promise(e=>{t.onload=()=>e(),t.onerror=()=>e(),setTimeout(e,3e3)}));Promise.all(o).then(()=>{setTimeout(e,200)})})}serializeDOM(t,e){const i=t.getBoundingClientRect(),o=e.defaultView.getComputedStyle(t);return{tag:t.tagName.toLowerCase(),attributes:this.getAttributes(t),computedStyle:this.extractStyles(o),boundingBox:{x:i.left,y:i.top,width:i.width,height:i.height},children:this.serializeChildren(t,e)}}serializeChildren(t,e){var i;const o=[];for(const r of Array.from(t.childNodes))if(r.nodeType===Node.ELEMENT_NODE){const t=r,i=t.tagName.toLowerCase(),n=e.defaultView.getComputedStyle(t);if("none"===n.display||"hidden"===n.visibility)continue;if("script"===i||"style"===i||"link"===i||"meta"===i||"noscript"===i)continue;const s=t.getBoundingClientRect();if(0===s.width&&0===s.height)continue;const a={type:"element",tag:i,attributes:this.getAttributes(t),computedStyle:this.extractStyles(n),boundingBox:{x:s.left,y:s.top,width:s.width,height:s.height},children:this.serializeChildren(t,e)};o.push(a)}else if(r.nodeType===Node.TEXT_NODE){const n=null===(i=r.textContent)||void 0===i?void 0:i.trim();if(!n)continue;const s=e.createRange();s.selectNodeContents(r);const a=s.getBoundingClientRect();if(0===a.width&&0===a.height)continue;const l=e.defaultView.getComputedStyle(t);o.push({type:"text",content:n,computedStyle:this.extractStyles(l),boundingBox:{x:a.left,y:a.top,width:a.width,height:a.height}})}return o}getAttributes(t){const e={};for(const i of Array.from(t.attributes))e[i.name]=i.value;return e}extractStyles(t){const e=["display","position","flexDirection","justifyContent","alignItems","flexWrap","gap","rowGap","columnGap","width","height","minWidth","minHeight","maxWidth","maxHeight","paddingTop","paddingRight","paddingBottom","paddingLeft","marginTop","marginRight","marginBottom","marginLeft","top","right","bottom","left","zIndex","fontFamily","fontSize","fontWeight","fontStyle","lineHeight","letterSpacing","textAlign","textDecoration","textTransform","color","backgroundColor","backgroundImage","backgroundSize","backgroundPosition","borderTopWidth","borderRightWidth","borderBottomWidth","borderLeftWidth","borderTopColor","borderRightColor","borderBottomColor","borderLeftColor","borderTopStyle","borderRightStyle","borderBottomStyle","borderLeftStyle","borderTopLeftRadius","borderTopRightRadius","borderBottomRightRadius","borderBottomLeftRadius","opacity","boxShadow","overflow","visibility","objectFit"],i={};for(const o of e){const e=t.getPropertyValue(this.camelToKebab(o));e&&""!==e&&"none"!==e&&"normal"!==e&&"auto"!==e&&(i[o]=e)}return i.display=t.getPropertyValue("display"),i.position=t.getPropertyValue("position"),i}camelToKebab(t){return t.replace(/[A-Z]/g,t=>`-${t.toLowerCase()}`)}destroyIframe(){this.iframe&&this.iframe.parentNode&&(this.iframe.parentNode.removeChild(this.iframe),this.iframe=null)}}let i=new Set(["desktop"]);function o(t){parent.postMessage({pluginMessage:t},"*")}function r(){const r=document.getElementById("url-input"),l=document.getElementById("btn-import");r.addEventListener("input",()=>{l.disabled=!r.value.trim()}),r.addEventListener("keydown",t=>{"Enter"!==t.key||l.disabled||l.click()}),l.addEventListener("click",async()=>{const d=r.value.trim();if(d){l.disabled=!0,n("Fetching website...",5),document.getElementById("status").classList.remove("visible");try{n("Downloading page...",10);const{html:r,baseUrl:s}=await async function(t){t.startsWith("http://")||t.startsWith("https://")||(t="https://"+t);const e=await fetch(t,{method:"GET",headers:{Accept:"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8","Accept-Language":"en-US,en;q=0.5"}});if(!e.ok)throw new Error(`Failed to fetch URL: ${e.status} ${e.statusText}`);const i=await e.text(),o=e.url||t,r=new URL(o).origin,n=i.match(/<title[^>]*>([^<]*)<\/title>/i),s=n?n[1].trim():void 0,a=function(t,e){const i=new URL(e);return t=t.replace(/(src|href|action)=["'](?!data:)(?!#)(?!javascript:)(?!mailto:)(?!tel:)([^"']+)["']/gi,(t,e,o)=>{try{return`${e}="${new URL(o,i).href}"`}catch(e){return t}}),t=t.replace(/url\(["']?(?!data:)([^"')]+)["']?\)/gi,(t,e)=>{try{return`url("${new URL(e.trim(),i).href}")`}catch(e){return t}}),t}(i,o);return{html:a,baseUrl:r,title:s}}(d),l=Array.from(i);for(let i=0;i<l.length;i++){const a=l[i],c=t[a],h=10+i/l.length*70;n(`Parsing ${c.name} layout...`,h);const m=new e(s),u=await m.parse(r,"",c.width,c.height);n(`Creating ${c.name} Figma frame...`,h+30),o({type:"import-dom",dom:Object.assign(Object.assign({},u),{attributes:Object.assign(Object.assign({},u.attributes),{"data-viewport":a,"data-source-url":d,"data-viewport-width":String(c.width),"data-viewport-height":String(c.height)})})})}n("Import complete!",100),a("success",`Imported ${d}`)}catch(t){a("error",t instanceof Error?t.message:"Failed to import"),s()}finally{l.disabled=!r.value.trim()}}})}function n(t,e){const i=document.getElementById("progress");i.classList.add("visible"),i.querySelector(".progress-fill").setAttribute("style",`width: ${e}%`),i.querySelector(".progress-text").textContent=t}function s(){document.getElementById("progress").classList.remove("visible")}function a(t,e){const i=document.getElementById("status");i.className=`status-message visible ${t}`,i.textContent=e}window.onmessage=t=>{const e=t.data.pluginMessage;if(e)switch(e.type){case"import-progress":n(e.message,e.percent);break;case"import-complete":n("Import complete!",100);break;case"import-error":s(),a("error",e.message)}},document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".viewport-option").forEach(t=>{t.addEventListener("click",()=>{const e=t.getAttribute("data-viewport");t.classList.contains("selected")?i.size>1&&(i.delete(e),t.classList.remove("selected")):(i.add(e),t.classList.add("selected"))})}),r()})})();</script></body></html>

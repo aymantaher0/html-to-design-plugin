@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8">
   <style>
-    /* ─── Reset & Base ─── */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg: #ffffff;
       --bg-secondary: #f5f5f5;
-      --bg-hover: #ebebeb;
       --text: #333333;
       --text-secondary: #666666;
       --text-tertiary: #999999;
@@ -19,7 +17,6 @@
       --primary-light: #e8f4fd;
       --success: #1bc47d;
       --error: #f24822;
-      --warning: #ffb020;
       --radius: 6px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -30,56 +27,20 @@
       color: var(--text);
       background: var(--bg);
       height: 100%;
-      overflow: hidden;
     }
 
-    /* ─── Layout ─── */
     .app {
       display: flex;
       flex-direction: column;
       height: 100%;
-    }
-
-    /* ─── Tab Bar ─── */
-    .tab-bar {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-      flex-shrink: 0;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 10px 8px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .tab:hover { color: var(--text); background: var(--bg-secondary); }
-
-    .tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    /* ─── Tab Content ─── */
-    .tab-content {
-      flex: 1;
-      overflow-y: auto;
       padding: 16px;
+      gap: 16px;
     }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ─── Form Elements ─── */
-    .field { margin-bottom: 12px; }
+    h2 {
+      font-size: 14px;
+      font-weight: 700;
+    }
 
     .field label {
       display: block;
@@ -89,33 +50,29 @@
       margin-bottom: 6px;
     }
 
-    input[type="text"], input[type="url"], textarea {
+    input[type="url"] {
       width: 100%;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       font-family: var(--font);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text);
       background: var(--bg);
       outline: none;
       transition: border-color 0.15s;
     }
 
-    input:focus, textarea:focus {
+    input:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 1px var(--primary);
     }
 
-    input::placeholder, textarea::placeholder {
-      color: var(--text-tertiary);
-    }
+    input::placeholder { color: var(--text-tertiary); }
 
-    /* ─── Viewport Selector ─── */
     .viewport-selector {
       display: flex;
       gap: 8px;
-      margin-bottom: 12px;
     }
 
     .viewport-option {
@@ -142,133 +99,30 @@
     .viewport-option svg { width: 24px; height: 24px; fill: var(--text-secondary); }
     .viewport-option.selected svg { fill: var(--primary); }
 
-    .viewport-option span {
-      font-size: 10px;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
+    .viewport-option span { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
     .viewport-option.selected span { color: var(--primary); }
+    .viewport-option .size { font-size: 9px; color: var(--text-tertiary); }
+    .viewport-option.selected .size { color: var(--primary); }
 
-    /* ─── Buttons ─── */
     .btn {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: var(--radius);
       font-family: var(--font);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-primary {
       background: var(--primary);
       color: white;
+      transition: background 0.15s;
     }
 
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-primary:disabled { background: var(--border); cursor: not-allowed; }
+    .btn:hover { background: var(--primary-hover); }
+    .btn:disabled { background: var(--border); cursor: not-allowed; }
 
-    .btn-secondary {
-      background: var(--bg-secondary);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover { background: var(--bg-hover); }
-
-    /* ─── File Upload ─── */
-    .file-drop {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.15s;
-      margin-bottom: 12px;
-    }
-
-    .file-drop:hover, .file-drop.dragover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .file-drop p { color: var(--text-secondary); font-size: 11px; margin-top: 6px; }
-    .file-drop .file-icon { font-size: 24px; color: var(--text-tertiary); }
-
-    .file-drop input[type="file"] { display: none; }
-
-    .file-list {
-      list-style: none;
-      margin-bottom: 12px;
-    }
-
-    .file-list li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 8px;
-      background: var(--bg-secondary);
-      border-radius: 4px;
-      margin-bottom: 4px;
-      font-size: 11px;
-    }
-
-    .file-list .remove-file {
-      cursor: pointer;
-      color: var(--error);
-      font-weight: 600;
-    }
-
-    /* ─── Code Editor ─── */
-    .editor-container {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .editor-tabs {
-      display: flex;
-      gap: 4px;
-    }
-
-    .editor-tab {
-      padding: 4px 12px;
-      font-size: 11px;
-      border: 1px solid var(--border);
-      border-radius: 4px 4px 0 0;
-      cursor: pointer;
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
-    }
-
-    .editor-tab.active {
-      background: var(--bg);
-      border-bottom-color: var(--bg);
-      color: var(--text);
-    }
-
-    .code-editor {
-      width: 100%;
-      height: 200px;
-      font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
-      font-size: 11px;
-      line-height: 1.5;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 0 var(--radius) var(--radius) var(--radius);
-      resize: vertical;
-      tab-size: 2;
-      color: var(--text);
-      background: var(--bg-secondary);
-    }
-
-    /* ─── Progress Bar ─── */
     .progress-container {
       display: none;
-      margin-top: 12px;
     }
 
     .progress-container.visible { display: block; }
@@ -295,342 +149,67 @@
       text-align: center;
     }
 
-    /* ─── Status Messages ─── */
     .status-message {
       display: none;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: var(--radius);
       font-size: 11px;
-      margin-top: 8px;
     }
 
     .status-message.visible { display: block; }
     .status-message.success { background: #e6f9f0; color: #0d6e3f; }
     .status-message.error { background: #fdecea; color: #b71c1c; }
-    .status-message.info { background: var(--primary-light); color: #0d47a1; }
 
-    /* ─── MCP Section ─── */
-    .mcp-info {
-      padding: 12px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-      margin-bottom: 12px;
-    }
+    .spacer { flex: 1; }
 
-    .mcp-info h4 {
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-
-    .mcp-info p {
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-
-    .mcp-info code {
-      display: block;
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 8px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 10px;
-      white-space: pre;
-      overflow-x: auto;
-      margin-top: 6px;
-    }
-
-    .mcp-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px;
-      background: var(--bg);
-      border-radius: 4px;
-      font-size: 11px;
-    }
-
-    .mcp-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-tertiary);
-    }
-
-    .mcp-dot.connected { background: var(--success); }
-
-    /* ─── Extension Section ─── */
-    .extension-info {
-      padding: 12px;
-      background: var(--bg-secondary);
-      border-radius: var(--radius);
-    }
-
-    .extension-info h4 { font-size: 12px; margin-bottom: 6px; }
-
-    .extension-info p {
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 8px;
-    }
-
-    .extension-steps {
-      list-style: decimal;
-      padding-left: 20px;
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.8;
-    }
-
-    /* ─── Re-import Banner ─── */
-    .reimport-banner {
-      display: none;
-      padding: 10px 16px;
-      background: var(--primary-light);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .reimport-banner.visible { display: flex; }
-
-    .reimport-banner .reimport-info {
-      flex: 1;
-      font-size: 11px;
-      color: var(--text);
-    }
-
-    .reimport-banner .reimport-info small {
-      display: block;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    .reimport-banner .btn-reimport {
-      padding: 6px 12px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .reimport-banner .btn-reimport:hover { background: var(--primary-hover); }
-
-    /* ─── Import Counter ─── */
-    .import-counter { font-size: 10px; }
-    .import-counter .count { font-weight: 600; }
-    .import-counter.warning .count { color: var(--warning); }
-    .import-counter.limit .count { color: var(--error); }
-
-    /* ─── Footer ─── */
     .footer {
-      flex-shrink: 0;
-      padding: 8px 16px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-size: 10px;
       color: var(--text-tertiary);
+      text-align: center;
     }
-
-    .footer a { color: var(--primary); text-decoration: none; }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Re-import Banner -->
-    <div class="reimport-banner" id="reimport-banner">
-      <div class="reimport-info">
-        <strong>Imported frame selected</strong>
-        <small id="reimport-source"></small>
-      </div>
-      <button class="btn-reimport" id="btn-reimport">Re-import</button>
+    <h2>HTML to Design</h2>
+
+    <div class="field">
+      <label for="url-input">Website URL</label>
+      <input type="url" id="url-input" placeholder="https://example.com" autofocus />
     </div>
 
-    <!-- Tab Bar -->
-    <div class="tab-bar">
-      <div class="tab active" data-tab="url">URL</div>
-      <div class="tab" data-tab="file">File</div>
-      <div class="tab" data-tab="editor">Editor</div>
-      <div class="tab" data-tab="extension">Extension</div>
-      <div class="tab" data-tab="mcp">MCP</div>
-    </div>
-
-    <!-- URL Tab -->
-    <div class="tab-content">
-      <div class="tab-panel active" id="panel-url">
-        <div class="field">
-          <label for="url-input">Website URL</label>
-          <input type="url" id="url-input" placeholder="https://example.com" />
+    <div class="field">
+      <label>Viewport</label>
+      <div class="viewport-selector">
+        <div class="viewport-option selected" data-viewport="desktop">
+          <svg viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>
+          <span>Desktop</span>
+          <span class="size">1440px</span>
         </div>
-
-        <div class="field">
-          <label>Viewport(s)</label>
-          <div class="viewport-selector">
-            <div class="viewport-option selected" data-viewport="desktop">
-              <svg viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>
-              <span>Desktop</span>
-              <span style="font-size:9px;color:var(--text-tertiary)">1440px</span>
-            </div>
-            <div class="viewport-option" data-viewport="tablet">
-              <svg viewBox="0 0 24 24"><path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"/></svg>
-              <span>Tablet</span>
-              <span style="font-size:9px;color:var(--text-tertiary)">768px</span>
-            </div>
-            <div class="viewport-option" data-viewport="mobile">
-              <svg viewBox="0 0 24 24"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"/></svg>
-              <span>Mobile</span>
-              <span style="font-size:9px;color:var(--text-tertiary)">375px</span>
-            </div>
-          </div>
+        <div class="viewport-option" data-viewport="tablet">
+          <svg viewBox="0 0 24 24"><path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"/></svg>
+          <span>Tablet</span>
+          <span class="size">768px</span>
         </div>
-
-        <button class="btn btn-primary" id="btn-import-url" disabled>Import Website</button>
-
-        <div class="progress-container" id="url-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-          <div class="progress-text">Preparing...</div>
+        <div class="viewport-option" data-viewport="mobile">
+          <svg viewBox="0 0 24 24"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"/></svg>
+          <span>Mobile</span>
+          <span class="size">375px</span>
         </div>
-
-        <div class="status-message" id="url-status"></div>
-      </div>
-
-      <!-- File Tab -->
-      <div class="tab-panel" id="panel-file">
-        <div class="file-drop" id="file-drop">
-          <div class="file-icon">&#128196;</div>
-          <p>Drop files here or click to upload</p>
-          <p style="margin-top:4px; font-size:10px">.html, .htm, .zip, .h2d, .eml, .emlx, .msg</p>
-          <input type="file" id="file-input" accept=".html,.htm,.zip,.h2d,.eml,.emlx,.msg" multiple />
-        </div>
-
-        <ul class="file-list" id="file-list"></ul>
-
-        <button class="btn btn-primary" id="btn-import-file" disabled>Import Files</button>
-
-        <div class="progress-container" id="file-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-          <div class="progress-text">Preparing...</div>
-        </div>
-
-        <div class="status-message" id="file-status"></div>
-      </div>
-
-      <!-- Editor Tab -->
-      <div class="tab-panel" id="panel-editor">
-        <div class="editor-container">
-          <div class="editor-tabs">
-            <div class="editor-tab active" data-editor="html">HTML</div>
-            <div class="editor-tab" data-editor="css">CSS</div>
-          </div>
-
-          <textarea class="code-editor" id="html-editor" placeholder="<!-- Paste your HTML here -->
-<div style=&quot;padding: 20px;&quot;>
-  <h1>Hello World</h1>
-  <p>Your design starts here.</p>
-</div>"></textarea>
-
-          <textarea class="code-editor" id="css-editor" style="display: none;" placeholder="/* Add your CSS styles here */
-body {
-  font-family: sans-serif;
-}"></textarea>
-        </div>
-
-        <div style="margin-top: 12px">
-          <button class="btn btn-primary" id="btn-import-code">Import Code</button>
-        </div>
-
-        <div class="progress-container" id="editor-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-          <div class="progress-text">Preparing...</div>
-        </div>
-
-        <div class="status-message" id="editor-status"></div>
-      </div>
-
-      <!-- Extension Tab -->
-      <div class="tab-panel" id="panel-extension">
-        <div class="extension-info">
-          <h4>Chrome Extension</h4>
-          <p>Import authenticated or private websites using our companion Chrome Extension.</p>
-          <ol class="extension-steps">
-            <li>Install the HTML to Design Chrome Extension</li>
-            <li>Navigate to the page you want to import</li>
-            <li>Click the extension icon to capture the page</li>
-            <li>The design will appear in Figma automatically</li>
-          </ol>
-        </div>
-
-        <div style="margin-top: 12px;">
-          <div class="mcp-status" id="extension-status">
-            <div class="mcp-dot" id="extension-dot"></div>
-            <span>Waiting for extension connection...</span>
-          </div>
-        </div>
-
-        <div class="progress-container" id="extension-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-          <div class="progress-text">Preparing...</div>
-        </div>
-
-        <div class="status-message" id="extension-status-msg"></div>
-      </div>
-
-      <!-- MCP Tab -->
-      <div class="tab-panel" id="panel-mcp">
-        <div class="mcp-info">
-          <h4>AI-Powered Design via MCP</h4>
-          <p>Connect AI tools like Claude Desktop or Cursor to generate and import designs directly into Figma.</p>
-          <p><strong>MCP Server Configuration:</strong></p>
-          <code>{
-  "mcpServers": {
-    "html-to-design": {
-      "command": "npx",
-      "args": ["html-to-design-mcp"]
-    }
-  }
-}</code>
-        </div>
-
-        <div style="margin-top: 12px;">
-          <div class="mcp-status" id="mcp-status">
-            <div class="mcp-dot" id="mcp-dot"></div>
-            <span>MCP server not connected</span>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top: 12px;">
-          <label for="mcp-prompt">AI Prompt (optional)</label>
-          <textarea id="mcp-prompt" style="height: 80px;" placeholder="Describe the design you want AI to generate..."></textarea>
-        </div>
-
-        <button class="btn btn-primary" id="btn-mcp-generate" disabled>Generate with AI</button>
-
-        <div class="progress-container" id="mcp-progress">
-          <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-          <div class="progress-text">Preparing...</div>
-        </div>
-
-        <div class="status-message" id="mcp-status-msg"></div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-      <span>HTML to Design v1.0</span>
-      <span class="import-counter" id="import-counter">
-        <span class="count" id="import-count-num">0</span>/10 imports (Free)
-      </span>
+    <button class="btn" id="btn-import" disabled>Import Website</button>
+
+    <div class="progress-container" id="progress">
+      <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+      <div class="progress-text">Preparing...</div>
     </div>
+
+    <div class="status-message" id="status"></div>
+
+    <div class="spacer"></div>
+    <div class="footer">HTML to Design v1.0</div>
   </div>
 </body>
 </html>
